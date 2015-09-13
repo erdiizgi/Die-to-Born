@@ -1,0 +1,6 @@
+C:\Users\EI\Documents\Visual Studio 2013\Projects\MiniCoolGameEngine\MiniCoolGameEngine\bin\MiniCoolGameEngine.dll.config
+C:\Users\EI\Documents\Visual Studio 2013\Projects\MiniCoolGameEngine\MiniCoolGameEngine\bin\MiniCoolGameEngine.dll
+C:\Users\EI\Documents\Visual Studio 2013\Projects\MiniCoolGameEngine\MiniCoolGameEngine\bin\MiniCoolGameEngine.pdb
+C:\Users\EI\Documents\Visual Studio 2013\Projects\MiniCoolGameEngine\MiniCoolGameEngine\obj\Debug\MiniCoolGameEngine.dll
+C:\Users\EI\Documents\Visual Studio 2013\Projects\MiniCoolGameEngine\MiniCoolGameEngine\obj\Debug\MiniCoolGameEngine.pdb
+C:\Users\EI\Documents\Visual Studio 2013\Projects\MiniCoolGameEngine\MiniCoolGameEngine\obj\Debug\MiniCoolGameEngine.csprojResolveAssemblyReference.cache
