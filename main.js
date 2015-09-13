@@ -2,6 +2,7 @@ var MCGE;
 (function (MCGE) {
     var Core;
     (function (Core) {
+        //this class keeps and sets the game state
         var GameState = (function () {
             function GameState(state) {
                 this._state = state;
@@ -25,6 +26,7 @@ var MCGE;
 (function (MCGE) {
     var Core;
     (function (Core) {
+        //this class keeps the data related the screen size
         var Game = (function () {
             function Game(name, width, height) {
                 //initialize the size
@@ -55,6 +57,7 @@ var MCGE;
 (function (MCGE) {
     var Core;
     (function (Core) {
+        //a scene can contain drawable elements to draw
         var Scene = (function () {
             function Scene(name) {
                 this.id = name;
@@ -63,14 +66,17 @@ var MCGE;
                 this.context = this.canvas.getContext('2d');
                 this.drawables = [];
             }
+            //adds a drawable to show
             Scene.prototype.addDrawable = function (drawable) {
                 drawable.setContext(this.context);
                 this.drawables.push(drawable);
             };
+            //remove all the drawables
             Scene.prototype.removeDrawables = function () {
                 this.drawables = null;
                 this.drawables = [];
             };
+            //clears the current canvas
             Scene.prototype.clean = function (x, y) {
                 this.context.clearRect(0, 0, x, y);
             };
@@ -111,6 +117,7 @@ var MCGE;
 (function (MCGE) {
     var Core;
     (function (Core) {
+        //this class used to keep collection of scenes
         var World = (function () {
             function World() {
                 this.sceneDeck = [];
@@ -144,7 +151,9 @@ var MCGE;
 (function (MCGE) {
     var Core;
     (function (Core) {
+        //this class is the engine that includes all controlling functions and game state loop
         var Engine = (function () {
+            //constructor
             function Engine(game) {
                 this.aspectRatio = 4 / 3;
                 this.game = game;
@@ -157,10 +166,12 @@ var MCGE;
                 this.container.setAttribute("id", "container");
                 Utils.containerCss(this.container, this.game.scaledWidth, this.game.scaledHeight);
             }
+            //set a story teller to the engine to show
             Engine.prototype.setStoryTeller = function (storyTeller) {
                 this.storyTeller = storyTeller;
                 this.storyTeller.init();
             };
+            //initializes the scenes and creates the events
             Engine.prototype.init = function () {
                 //Append the canvas' to the page
                 for (var i = 0; i < this.world.Scenes.length; i++) {
@@ -184,6 +195,7 @@ var MCGE;
                     }
                 }.bind(this);
             };
+            //game loop
             Engine.prototype.run = function (grid) {
                 var _this = this;
                 switch (this.game.gameState.state) {
@@ -243,6 +255,7 @@ var MCGE;
                 }
                 window.requestAnimationFrame(function () { return _this.run(grid); });
             };
+            //Collision control
             Engine.prototype.checkForCollision = function (grid, leftLeg, rightLeg) {
                 var obstacle = grid.giveSpaceCoor();
                 var result = false;
@@ -256,6 +269,7 @@ var MCGE;
                 }
                 return result;
             };
+            //Checks the age of the player and initializes the era of the player
             Engine.prototype.playerCheckEra = function (age) {
                 var realAge = Math.floor(age / 1000);
                 if (realAge < 75 && realAge >= 30) {
@@ -271,6 +285,7 @@ var MCGE;
                     this.game.player.changeEra(1);
                 }
             };
+            //resizes while keeping aspect ratio as the same
             Engine.prototype.resize = function () {
                 this.game.reCalculate();
                 Utils.containerCss(document.getElementById("container"), this.game.scaledWidth, this.game.scaledHeight);
@@ -288,6 +303,7 @@ var MCGE;
 (function (MCGE) {
     var Helper;
     (function (Helper) {
+        //contains useful static helper functions
         var Utils = (function () {
             function Utils() {
             }
@@ -318,6 +334,7 @@ var MCGE;
 (function (MCGE) {
     var UI;
     (function (UI) {
+        //base class for the drawables
         var Drawable = (function () {
             function Drawable(x, y, isVisible) {
                 this.x = x;
@@ -348,6 +365,7 @@ var MCGE;
 (function (MCGE) {
     var UI;
     (function (UI) {
+        //a label is a text can be adjusted according to the wish
         var Label = (function (_super) {
             __extends(Label, _super);
             function Label(text, x, y, size, font, color) {
@@ -382,6 +400,7 @@ var MCGE;
 (function (MCGE) {
     var UI;
     (function (UI) {
+        //creates text with shadow
         var StylishLabel = (function (_super) {
             __extends(StylishLabel, _super);
             function StylishLabel(text, x, y, size, font, color) {
@@ -412,6 +431,7 @@ var MCGE;
 (function (MCGE) {
     var UI;
     (function (UI) {
+        //this class is the base class for the movable drawables
         var Movable = (function (_super) {
             __extends(Movable, _super);
             function Movable(x, y) {
@@ -450,6 +470,7 @@ var MCGE;
 (function (MCGE) {
     var UI;
     (function (UI) {
+        //creates a label which can be moved by using arrow keys
         var MovableLabel = (function (_super) {
             __extends(MovableLabel, _super);
             function MovableLabel(text, x, y, size, font, color, speed) {
@@ -498,6 +519,7 @@ var MCGE;
 (function (MCGE) {
     var Component;
     (function (Component) {
+        //Story is a page of text
         var Story = (function () {
             function Story(text, scene, canvasWidth, canvasHeight) {
                 this.lineSpace = 10;
@@ -526,6 +548,7 @@ var MCGE;
 (function (MCGE) {
     var Component;
     (function (Component) {
+        //this class behaves to control stories
         var StoryTeller = (function () {
             function StoryTeller(scene, width, height) {
                 this._storyIndex = 0;
@@ -539,18 +562,22 @@ var MCGE;
                 this._stories = [];
                 this._hasNext = true;
             }
+            //adds text to the story page
             StoryTeller.prototype.addStoryText = function (storyText) {
                 this._stories[this._stories.length] = storyText;
             };
+            //removes all the existing stories
             StoryTeller.prototype.removeAll = function () {
                 this._stories = [];
                 this._storyIndex = 0;
             };
+            //inits the current story
             StoryTeller.prototype.init = function () {
                 this.currentStory = new Component.Story(this._stories[this._storyIndex], this._scene, this._width, this._height);
                 this._scene.addDrawable(new Component.Graphics.Square(10, 10, this._width - 14, this._height - 14, 2));
             };
             Object.defineProperty(StoryTeller.prototype, "hasNext", {
+                //hasNext page to show
                 get: function () {
                     return this._hasNext;
                 },
@@ -575,6 +602,7 @@ var MCGE;
                 if (this.isNext == false)
                     this.isNext = true;
             };
+            //inits the splash screen
             StoryTeller.prototype.initSplashScreen = function () {
                 var circle = new Component.Graphics.Circle(this._width / 3, this._height / 2, 100, "#66808F", true, 1);
                 var circle2 = new Component.Graphics.Circle(this._width / 3, this._height / 2, 130, "#495555", true, 1);
@@ -595,14 +623,17 @@ var MCGE;
                 this._scene.addDrawable(label2);
                 this._hasNext = false;
             };
+            //cleans the current screen
             StoryTeller.prototype.clean = function (width, height) {
                 this._scene.clean(width, height);
             };
+            //draws the elements onto screen
             StoryTeller.prototype.draw = function () {
                 for (var i = 0; i < this._scene.elements.length; i++) {
                     this._scene.elements[i].draw();
                 }
             };
+            //updates alpha values and gives an fade out effect
             StoryTeller.prototype.update = function () {
                 for (var i = 0; i < this._scene.elements.length; i++) {
                     this._scene.elements[i].update();
@@ -646,6 +677,7 @@ var MCGE;
     (function (Component) {
         var Graphics;
         (function (Graphics) {
+            //draws a square
             var Square = (function (_super) {
                 __extends(Square, _super);
                 function Square(x, y, width, height, lineWidth) {
@@ -665,6 +697,7 @@ var MCGE;
                 return Square;
             })(MCGE.UI.Drawable);
             Graphics.Square = Square;
+            //draws a circle
             var Circle = (function (_super) {
                 __extends(Circle, _super);
                 function Circle(x, y, radius, color, isAnimated, opacity) {
@@ -701,6 +734,7 @@ var MCGE;
                 return Circle;
             })(MCGE.UI.Drawable);
             Graphics.Circle = Circle;
+            //draws mountain for the left and right side of the game screen
             var Mountain = (function (_super) {
                 __extends(Mountain, _super);
                 function Mountain(x, y, mountainType, side, isFlipped) {
@@ -875,6 +909,7 @@ var MCGE;
                 return Mountain;
             })(MCGE.UI.Drawable);
             Graphics.Mountain = Mountain;
+            //draws platform obstacles
             var Platform = (function (_super) {
                 __extends(Platform, _super);
                 function Platform(x, y, isFlipped, isVisible) {
@@ -976,6 +1011,7 @@ var MCGE;
                 return Platform;
             })(MCGE.UI.Drawable);
             Graphics.Platform = Platform;
+            //draws an infobox that can be colored
             var InfoBox = (function (_super) {
                 __extends(InfoBox, _super);
                 function InfoBox(x, y, percent, color) {
@@ -1044,12 +1080,14 @@ var MCGE;
                     this.isColliding = false;
                     this.collideColor = "#17a4e6";
                 }
+                //sets the degree for the players arms and legs
                 Player.prototype.setDegree = function (degree) {
                     this.leftArmDegree = this.cleftArmDegree + degree;
                     this.rightArmDegree = this.crightArmDegree + degree;
                     this.leftLegDegree = this.cleftLegDegree + degree;
                     this.rightLegDegree = this.crightLegDegree + degree;
                 };
+                //inits the degree for the players arms and legs
                 Player.prototype.initDegrees = function () {
                     this.cleftArmDegree = 0;
                     this.crightArmDegree = 0;
@@ -2106,6 +2144,7 @@ var MCGE;
                 this.mountainFactory = new MCGE.Factories.MountainFactory();
                 this.platformFactory = new MCGE.Factories.PlatformFactory();
             }
+            //initializes the next platform obstacle set
             Grid.prototype.platformInit = function () {
                 for (var k = 0; k < this.columnCount; k++) {
                     this.platforms[k] = Utils.randomBetween(1, 2);
@@ -2126,6 +2165,7 @@ var MCGE;
                 this.platforms[spaceValue] = 0;
                 this.lastSpaceValue = spaceValue;
             };
+            //inits the first status
             Grid.prototype.init = function () {
                 for (var i = 0; i < this.rowCount; i++) {
                     this.platformInit();
@@ -2149,6 +2189,7 @@ var MCGE;
                     }
                 }
             };
+            //updates the position of mountains and platforms
             Grid.prototype.update = function (dy) {
                 if (this.mountainDrawables[0][0].y < -350) {
                     this.swapPlatforms();
@@ -2161,6 +2202,7 @@ var MCGE;
                     }
                 }
             };
+            //swaps the platforms instead of creating one for keeping memory low
             Grid.prototype.swapPlatforms = function () {
                 //Save the first column to the temporary array
                 for (var m = 0; m < this.columnCount; m++) {
@@ -2207,6 +2249,7 @@ var MCGE;
                     this.platformDrawables[3][m] = this.temporaryColumn[m];
                 }
             };
+            //swaps the mountains instead of creating one for keeping memory low
             Grid.prototype.swapMountains = function () {
                 // save the first two
                 var temp = [this.mountainDrawables[0][0], this.mountainDrawables[0][5]];
@@ -2224,6 +2267,7 @@ var MCGE;
                 this.mountainDrawables[3][0] = temp[0];
                 this.mountainDrawables[3][5] = temp[1];
             };
+            //returns the first space's coordinates
             Grid.prototype.giveSpaceCoor = function () {
                 var num;
                 var isFlipped;
@@ -2246,8 +2290,11 @@ var MCGE;
     (function (Component) {
         var Game;
         (function (Game) {
+            //It keeps the game related data
             var GameStatus = (function () {
+                //constructor
                 function GameStatus() {
+                    //isStarted for the scoring
                     this.isStarted = false;
                     this.speed = 0;
                     this.age = 75000;
@@ -2256,6 +2303,7 @@ var MCGE;
                     this.time = 0;
                     this.speedLimit = 8;
                 }
+                //updates the data
                 GameStatus.prototype.update = function () {
                     this.time++;
                     if (this.speed < this.speedLimit)
@@ -2267,14 +2315,17 @@ var MCGE;
                     if (this.age <= 0)
                         this.age = 0;
                 };
+                //decreases the speed when the player hit an object
                 GameStatus.prototype.decreaseSpeed = function () {
                     this.time = 50;
                 };
+                //adds info boxes to use
                 GameStatus.prototype.addInfoBoxes = function (ageBox, memoryBox, speedBox) {
                     this.ageBox = ageBox;
                     this.memoryBox = memoryBox;
                     this.speedBox = speedBox;
                 };
+                //resets game status
                 GameStatus.prototype.reset = function () {
                     this.speed = 0;
                     this.age = 75000;
@@ -2284,6 +2335,7 @@ var MCGE;
                     this.speedLimit = 8;
                     this.isStarted = false;
                 };
+                //starts to keep time data
                 GameStatus.prototype.start = function () {
                     if (this.isStarted == false) {
                         var time = new Date();
@@ -2291,6 +2343,7 @@ var MCGE;
                         this.isStarted = true;
                     }
                 };
+                //stops the keep time data
                 GameStatus.prototype.stop = function () {
                     var time = new Date();
                     this.finishTime = time.getTime();
@@ -2338,6 +2391,7 @@ var InfoBox = MCGE.Component.Graphics.InfoBox;
 var Grid = MCGE.Component.Grid;
 var GameStatus = MCGE.Component.Game.GameStatus;
 function Main() {
+    //creating a game
     var game = new Game("Die to Born", 800, 600);
     //Add a storyteller
     var storyScene = new Scene("StoryScene");
@@ -2348,10 +2402,13 @@ function Main() {
     storyTeller.addStoryText("There is nothing to do except one.&You can fall as fast as you can,&only this will make the time slower and&keep your memories in your mind.&&Just use the left and right arrow keys to play.");
     //Add a world
     var world = new World();
+    //Add a game scene
     var gameScene = new Scene("Game");
+    //Add a movable player
     var player = new Player(380, 100);
     game.addPlayer(player);
     gameScene.addDrawable(player);
+    //Init a grid system to keep game screen simple
     var grid = new Grid(game, 6, 4);
     grid.init();
     for (var i = 0; i < grid.rowCount; i++) {
@@ -2364,9 +2421,11 @@ function Main() {
             gameScene.addDrawable(grid.mountainDrawables[i][j]);
         }
     }
+    //create info boxes 
     var ageBox = new InfoBox(110, 10, 75, "#17a4e6");
     var memoryBox = new InfoBox(400, 10, 100, "#00ff00");
     var speed = new InfoBox(640, 10, 10, "#ff1e1f");
+    //add these infoboxes to the game
     gameScene.addDrawable(ageBox);
     gameScene.addDrawable(memoryBox);
     gameScene.addDrawable(speed);
@@ -2391,6 +2450,7 @@ var MCGE;
 (function (MCGE) {
     var Factories;
     (function (Factories) {
+        //this class creates mountain according to the given number
         var MountainFactory = (function () {
             function MountainFactory() {
             }
@@ -2428,6 +2488,7 @@ var MCGE;
             return MountainFactory;
         })();
         Factories.MountainFactory = MountainFactory;
+        //this class creates platform according to the given number and positions
         var PlatformFactory = (function () {
             function PlatformFactory() {
             }
@@ -2456,6 +2517,7 @@ var MCGE;
 (function (MCGE) {
     var UI;
     (function (UI) {
+        //this is a space that means nothing
         var Space = (function (_super) {
             __extends(Space, _super);
             function Space() {
